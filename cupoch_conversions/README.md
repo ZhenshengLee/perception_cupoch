@@ -20,9 +20,9 @@ the ros-io interface of cupoch is tough, so this package is generated according 
 There are two functions provided in this library:
 
 ```cpp
-void cupoch_ros::cupochToRos(const cupoch::geometry::PointCloud& pointcloud, sensor_msgs::PointCloud2& ros_pc2, std::string frame_id = "cupoch_pointcloud");
+void cupoch_ros::cupochToRos(const cupoch::geometry::PointCloud& pointcloud, sensor_msgs::msg::PointCloud2& ros_pc2, std::string frame_id = "cupoch_pointcloud");
 
-void cupoch_ros::rosToCupoch(const sensor_msgs::PointCloud2ConstPtr& ros_pc2, cupoch::geometry::PointCloud& o3d_pc, bool skip_colors=false);
+void cupoch_ros::rosToCupoch(const sensor_msgs::msg::PointCloud2::SharedPtr& ros_pc2, cupoch::geometry::PointCloud& o3d_pc, bool skip_colors=false);
 ```
 
 * As CUPOCH pointclouds only contain `points`, `colors` and `normals`, the interface currently supports XYZ, XYZRGB pointclouds. XYZI pointclouds are handled by placing the `intensity` value in the `colors_`.

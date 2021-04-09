@@ -13,6 +13,10 @@ target_link_libraries(${TEST_NAME}
     gtest_main
     ${CUPOCH_LIBRARIES}
     cupoch_conversions
-    ${catkin_LIBRARIES}
+)
+install(TARGETS ${TEST_NAME}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 ga_add_tests(TARGET ${TEST_NAME} TEST_TYPE FUNCTIONAL)

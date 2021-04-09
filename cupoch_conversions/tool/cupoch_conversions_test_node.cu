@@ -1,9 +1,9 @@
 // prj hdrs
-#include "cupoch_conversions/cupoch_conversions.h"
+#include "cupoch_conversions/cupoch_conversions.hpp"
 
 // ros hdrs
 #include <ros/ros.h>
-#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
 using namespace std;
 using namespace cupoch;
@@ -22,8 +22,8 @@ int main(int argc, char** argv)
     private_nh.param("camera3d_point_topic", camera_point_topic, std::string("/points_cloud"));
 
     ROS_INFO("waiting for msg in topic(%s)", camera_point_topic.c_str());
-    sensor_msgs::PointCloud2ConstPtr msg =
-        ros::topic::waitForMessage<sensor_msgs::PointCloud2>(camera_point_topic, private_nh);
+    sensor_msgs::msg::PointCloud2::SharedPtr msg =
+        ros::topic::waitForMessage<sensor_msgs::msg::PointCloud2>(camera_point_topic, private_nh);
     ROS_INFO("topic(%s) received...", camera_point_topic.c_str());
 
     auto cloud = std::make_shared<geometry::PointCloud>();

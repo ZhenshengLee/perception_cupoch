@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<package format="2">
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>cupoch_conversions</name>
-  <version>0.0.2</version>
-  <description>Provides conversion functions to and from cupoch datatypes</description>
+  <version>0.1.0</version>
+  <description>Provides conversion functions to and from Open3D datatypes</description>
 
   <maintainer email="matnay17@gmail.com">Pranay Mathur</maintainer>
   <maintainer email="nkhedekar@nevada.unr.edu">Nikhil Khedekar</maintainer>
@@ -12,16 +13,15 @@
 
   <author email="matnay17@gmail.com">Pranay Mathur</author>
   <author email="nkhedekar@nevada.unr.edu">Nikhil Khedekar</author>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>eigen</depend>
   <depend>gpuac_base</depend>
+  <depend>urdfdom</depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

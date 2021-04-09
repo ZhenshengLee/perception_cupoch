@@ -2,22 +2,25 @@
 #include <gtest/gtest.h>
 
 //cupoch_conversions
-#include "cupoch_conversions/cupoch_conversions.h"
+#include "cupoch_conversions/cupoch_conversions.hpp"
 
 // cupoch
 #include <cupoch/cupoch.h>
 
 // ROS
-#include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/point_cloud2_iterator.h>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
 
-// Boost
-#include <boost/make_shared.hpp>
+// C++
+#include <memory>
+
+// ROS
+#include "rclcpp/rclcpp.hpp"
 
 using namespace cupoch;
 using namespace Eigen;
 
-TEST(ConversionFunctions, cupochToRos_uncolored)
+TEST(ConversionFunctions, cupochToRos2_uncolored)
 {
   auto cupoch_pc = std::make_shared<cupoch::geometry::PointCloud>();
   thrust::host_vector<Eigen::Vector3f> cupoch_pc_points_host;
@@ -27,7 +30,7 @@ TEST(ConversionFunctions, cupochToRos_uncolored)
   }
   cupoch_pc->SetPoints(cupoch_pc_points_host);
 
-  sensor_msgs::PointCloud2 ros_pc2;
+  sensor_msgs::msg::PointCloud2 ros_pc2;
   cupoch_conversions::cupochToRos(cupoch_pc, ros_pc2, "cupoch_frame");
   EXPECT_EQ(ros_pc2.height * ros_pc2.width, cupoch_pc->GetPoints().size());
   sensor_msgs::PointCloud2Iterator<float> ros_pc2_x(ros_pc2, "x");
@@ -42,7 +45,7 @@ TEST(ConversionFunctions, cupochToRos_uncolored)
   }
 }
 
-TEST(ConversionFunctions, cupochToRos_colored)
+TEST(ConversionFunctions, cupochToRos2_colored)
 {
   auto cupoch_pc = std::make_shared<cupoch::geometry::PointCloud>();
   thrust::host_vector<Eigen::Vector3f> cupoch_pc_points_host;
@@ -59,7 +62,7 @@ TEST(ConversionFunctions, cupochToRos_colored)
   EXPECT_EQ(false, cupoch_pc->IsEmpty());
   EXPECT_EQ(true, cupoch_pc->HasColors());
 
-  sensor_msgs::PointCloud2 ros_pc2;
+  sensor_msgs::msg::PointCloud2 ros_pc2;
   cupoch_conversions::cupochToRos(cupoch_pc, ros_pc2, "cupoch_frame");
   EXPECT_EQ(ros_pc2.height * ros_pc2.width, cupoch_pc->GetPoints().size());
   sensor_msgs::PointCloud2Iterator<float> ros_pc2_x(ros_pc2, "x");
@@ -83,7 +86,7 @@ TEST(ConversionFunctions, cupochToRos_colored)
 
 TEST(ConversionFunctions, rosToCupoch_uncolored)
 {
-  sensor_msgs::PointCloud2 ros_pc2;
+  sensor_msgs::msg::PointCloud2 ros_pc2;
   ros_pc2.header.frame_id = "ros";
   ros_pc2.height = 1;
   ros_pc2.width = 5;
@@ -103,7 +106,7 @@ TEST(ConversionFunctions, rosToCupoch_uncolored)
     *mod_z = 10.5 * i;
   }
 
-  const sensor_msgs::PointCloud2ConstPtr &ros_pc2_ptr = boost::make_shared<sensor_msgs::PointCloud2>(ros_pc2);
+  const sensor_msgs::msg::PointCloud2::SharedPtr &ros_pc2_ptr = std::make_shared<sensor_msgs::msg::PointCloud2>(ros_pc2);
   auto cupoch_pc = std::make_shared<cupoch::geometry::PointCloud>();
   cupoch_conversions::rosToCupoch(ros_pc2_ptr, cupoch_pc);
 
@@ -121,7 +124,7 @@ TEST(ConversionFunctions, rosToCupoch_uncolored)
 
 TEST(ConversionFunctions, rosToCupoch_colored)
 {
-  sensor_msgs::PointCloud2 ros_pc2;
+  sensor_msgs::msg::PointCloud2 ros_pc2;
   ros_pc2.header.frame_id = "ros";
   ros_pc2.height = 1;
   ros_pc2.width = 5;
@@ -148,7 +151,7 @@ TEST(ConversionFunctions, rosToCupoch_colored)
     *mod_b = 10 * i;
   }
 
-  const sensor_msgs::PointCloud2ConstPtr &ros_pc2_ptr = boost::make_shared<sensor_msgs::PointCloud2>(ros_pc2);
+  const sensor_msgs::msg::PointCloud2::SharedPtr &ros_pc2_ptr = std::make_shared<sensor_msgs::msg::PointCloud2>(ros_pc2);
   auto cupoch_pc = std::make_shared<cupoch::geometry::PointCloud>();
   cupoch_conversions::rosToCupoch(ros_pc2_ptr, cupoch_pc);
 

@@ -1,6 +1,9 @@
 set(TEST_NAME cupoch_conversions_test_node)
 cuda_add_executable(${TEST_NAME} cupoch_conversions_test_node.cu)
-add_dependencies(${EXENAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ament_target_dependencies(${TEST_NAME}
+    rclcpp
+    sensor_msgs
+)
 target_include_directories(${TEST_NAME} PUBLIC
     ${CUPOCH_INCLUDE_DIRS}
     ${THRUST_INCLUDE_DIR}

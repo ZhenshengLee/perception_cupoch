@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "cupoch_conversions/cupoch_conversions.h"
+// C++
+#include <memory>
+#include <string>
+
+#include "cupoch_conversions/cupoch_conversions.hpp"
 
 namespace cupoch_conversions
 {
   // d2h: get points
-  void cupochToRos(std::shared_ptr<cupoch::geometry::PointCloud> &pointcloud, sensor_msgs::PointCloud2 &ros_pc2, std::string frame_id)
+  void cupochToRos(std::shared_ptr<cupoch::geometry::PointCloud> &pointcloud, sensor_msgs::msg::PointCloud2 &ros_pc2, std::string frame_id)
   {
     // d2h
     auto pointcloud_points_host = pointcloud->GetPoints();
@@ -70,7 +74,7 @@ namespace cupoch_conversions
 
   // gpu不能随意push_back
   // h2d
-  void rosToCupoch(const sensor_msgs::PointCloud2ConstPtr &ros_pc2, std::shared_ptr<cupoch::geometry::PointCloud> &cupoch_pc, bool skip_colors)
+  void rosToCupoch(const sensor_msgs::msg::PointCloud2::SharedPtr &ros_pc2, std::shared_ptr<cupoch::geometry::PointCloud> &cupoch_pc, bool skip_colors)
   {
     // host
     thrust::host_vector<Eigen::Vector3f> cupoch_pc_points_host;
