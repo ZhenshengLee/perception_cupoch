@@ -18,7 +18,6 @@
   <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>eigen</depend>
-  <depend>gpuac_base</depend>
   <depend>urdfdom</depend>
 
   <export>

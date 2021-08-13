@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(cupoch_conversions)
 
-find_package(gpuac_base REQUIRED)
+# Add this repository's cmake modules to CMAKE_MODULE_PATH
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_LIST_DIR}/cmake)
+
+include(ga_build_common)
+
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 
@@ -38,7 +42,6 @@ cuda_add_library(cupoch_conversions STATIC src/cupoch_conversions.cu)
 ament_target_dependencies(cupoch_conversions
     rclcpp
     sensor_msgs
-    gpuac_base
     urdfdom
 )
 target_include_directories(cupoch_conversions PRIVATE
