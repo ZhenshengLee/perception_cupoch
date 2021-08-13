@@ -29,8 +29,8 @@ list(INSERT CMAKE_PREFIX_PATH 0 /opt/caffe/caffe-mobilenet-ssd)
 # list(INSERT CMAKE_PREFIX_PATH 0 /opt/pcl/pcl-1.9.1)
 # list(INSERT CMAKE_PREFIX_PATH 0 /opt/pcl/pcl-1.10.1)
 # 增加对open3d的支持
-list(INSERT CMAKE_PREFIX_PATH 0 /opt/open3d/open3d-gpu)
-list(INSERT CMAKE_PREFIX_PATH 0 /opt/open3d/open3d)
+# list(INSERT CMAKE_PREFIX_PATH 0 /opt/open3d/open3d-gpu)
+# list(INSERT CMAKE_PREFIX_PATH 0 /opt/open3d/open3d)
 # 使用自带eigen
 list(INSERT CMAKE_PREFIX_PATH 0 /opt/eigen/eigen)
 # 增加对cupoch支持
@@ -71,7 +71,7 @@ set(CUPOCH_LIBRARIES
     stdgpu
     flann_cuda_s
     fmt
-    rmm
+    # rmm
     liblzf
     rply
     ${CUDA_LIBRARIES}
