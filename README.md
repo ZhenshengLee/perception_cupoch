@@ -1,6 +1,6 @@
 # perception_cupoch
 
-This package provides functions that can convert pointclouds from ROS to Open3D and vice-versa.
+This package provides functions that can convert pointclouds from ROS to cupoch and vice-versa.
 
 ## Dependencies
 
@@ -16,21 +16,51 @@ This package provides functions that can convert pointclouds from ROS to Open3D 
 
 ### cupoch
 
-* Instructions to setup Open3D can be found [here](https://github.com/neka-nat/cupoch).
+* Instructions to setup cupoch can be found [here](https://github.com/neka-nat/cupoch).
 
-### open3d_conversions
+### cupoch_conversions
 
 * In case you are building this package from source, time taken for the conversion functions will be much larger if it is not built in `Release` mode.
 
-## Usage
+## Build
+
+in `cupoch_conversions/cmake/ga_build_common.cmake`, set the `CUPOCH_ROOT` correctly.
+
+```sh
+export GPUAC_COMPILE_WITH_CUDA=1
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+```
+
+## test
+
+### Unit Test
+
+```sh
+cd install/cupoch_conversions/lib/cupoch_conversions
+./cupoch_test
+./cupoch_conversions_test
+```
+
+### ROS node test
+
+```sh
+# t1
+cd install/cupoch_conversions/lib/cupoch_conversions
+./cupoch_conversions_test_node
+
+# t2
+rviz2
+```
+
+## API Usage
 
 There are two functions provided in this library:
 
 ```cpp
-void cupochToRos(std::shared_ptr<cupoch::geometry::PointCloud> &pointcloud, sensor_msgs::PointCloud2 &ros_pc2,
+void cupochToRos(std::shared_ptr<cupoch::geometry::PointCloud> &pointcloud, sensor_msgs::msg::PointCloud2 &ros_pc2,
                    std::string frame_id = "cupoch_pointcloud");
 
-void rosToCupoch(const sensor_msgs::PointCloud2ConstPtr &ros_pc2, std::shared_ptr<cupoch::geometry::PointCloud> &o3d_pc,
+void rosToCupoch(const sensor_msgs::msg::PointCloud2::SharedPtr &ros_pc2, std::shared_ptr<cupoch::geometry::PointCloud> &o3d_pc,
                    bool skip_colors = false);
 ```
 

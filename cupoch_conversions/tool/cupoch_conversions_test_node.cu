@@ -1,41 +1,66 @@
+// std hdrs
+#include <chrono>
+#include <cstring>
+#include <memory>
+#include <string>
+#include <utility>
+
 // prj hdrs
 #include "cupoch_conversions/cupoch_conversions.hpp"
 
 // ros hdrs
-#include <ros/ros.h>
+#include "rclcpp/rclcpp.hpp"
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
 using namespace std;
+using namespace std::chrono_literals;
 using namespace cupoch;
+using namespace cupoch_conversions;
 
-std::string camera_point_topic;
+class Talker: public rclcpp::Node {
+private:
+  using Topic = sensor_msgs::msg::PointCloud2;
 
-int main(int argc, char** argv)
-{
-    // 初始化ROS环境,一个进程
-    ros::init(argc, argv, "cupoch_conversions_test_node");
-    ros::NodeHandle private_nh("~");
+public:
+  explicit Talker(const rclcpp::NodeOptions & options)
+  : Node("shm_demo_pc_talker", options) {
 
-    utility::InitializeAllocator();
-    utility::SetVerbosityLevel(utility::VerbosityLevel::Debug);
-
-    private_nh.param("camera3d_point_topic", camera_point_topic, std::string("/points_cloud"));
-
-    ROS_INFO("waiting for msg in topic(%s)", camera_point_topic.c_str());
-    sensor_msgs::msg::PointCloud2::SharedPtr msg =
-        ros::topic::waitForMessage<sensor_msgs::msg::PointCloud2>(camera_point_topic, private_nh);
-    ROS_INFO("topic(%s) received...", camera_point_topic.c_str());
-
-    auto cloud = std::make_shared<geometry::PointCloud>();
-    cupoch_conversions::rosToCupoch(msg, cloud);
-
-    if (cloud->HasPoints())
-    {
-        ROS_INFO("has points");
+    input_cloud = io::CreatePointCloudFromFile("./res/pcd/twoobstacle.pcd");
+    if (input_cloud->HasPoints()) {
+      RCLCPP_INFO(this->get_logger(), "has points");
     }
 
+    auto publishMessage = [this]()->void {
 
+      Topic msg;
+      cupochToRos(input_cloud, msg);
+      RCLCPP_INFO(this->get_logger(), "Publishing pointcloud by cupoch");
+      m_publisher->publish(std::move(msg));
+    };
 
-    ROS_INFO("topic(%s) processed done...", camera_point_topic.c_str());
-    return 0;
+    rclcpp::QoS qos(rclcpp::KeepLast(10));
+    m_publisher = this->create_publisher < Topic > ("cupoch_pc", qos);
+
+    // Use a timer to schedule periodic message publishing.
+    m_timer = this->create_wall_timer(1s, publishMessage);
+  }
+
+private:
+  rclcpp::Publisher < Topic > ::SharedPtr m_publisher;
+  rclcpp::TimerBase::SharedPtr m_timer;
+  std::shared_ptr < cupoch::geometry::PointCloud >
+  input_cloud {std::make_shared < cupoch::geometry::PointCloud > ()};
+
+};
+
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  utility::InitializeAllocator(cupoch::utility::rmmAllocationMode_t::PoolAllocation, 1000000000);
+  utility::SetVerbosityLevel(cupoch::utility::VerbosityLevel::Debug);
+  rclcpp::NodeOptions options;
+  rclcpp::spin(std::make_shared < Talker > (options));
+  rclcpp::shutdown();
+
+  return 0;
 }

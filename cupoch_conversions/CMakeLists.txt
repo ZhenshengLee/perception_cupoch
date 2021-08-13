@@ -27,6 +27,14 @@ include_directories(
     ${CUPOCH_INCLUDE_DIRS}
 )
 
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME}/
+)
+
+install(DIRECTORY res
+  DESTINATION lib/${PROJECT_NAME}/
+)
+
 set_directory_properties(PROPERTIES COMPILE_DEFINITIONS "")
 
 APPEND_TARGET_ARCH_FLAGS()
@@ -57,7 +65,7 @@ target_link_libraries(cupoch_conversions
 # Tests
 if(GA_BUILD_TEST)
     add_subdirectory(test)
-    # add_subdirectory(tool)
+    add_subdirectory(tool)
 endif()
 
 # Install

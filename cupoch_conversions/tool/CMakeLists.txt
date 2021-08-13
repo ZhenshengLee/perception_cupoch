@@ -19,5 +19,10 @@ target_link_libraries(${TEST_NAME}
     ${CUDA_CUBLAS_LIBRARIES}
     ${CUDA_curand_LIBRARY}
     cupoch_conversions
-    ${catkin_LIBRARIES}
+)
+
+install(TARGETS ${TEST_NAME}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION lib/${PROJECT_NAME}
 )

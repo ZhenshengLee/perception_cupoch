@@ -71,10 +71,10 @@ set(CUPOCH_LIBRARIES
     turbojpeg
     stdgpu
     flann_cuda_s
-    fmt
     # rmm
     liblzf
     rply
+    spdlog
     ${CUDA_LIBRARIES}
     ${CUDA_CUBLAS_LIBRARIES}
     ${CUDA_curand_LIBRARY}

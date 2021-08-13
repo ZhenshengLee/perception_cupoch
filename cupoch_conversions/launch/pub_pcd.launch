@@ -1,6 +1,0 @@
-<launch>
-    <!-- 发送点云 -->
-    <node pkg="pcl_ros" type="pcd_to_pointcloud" name="target_pcd_to_pointcloud" args="$(find cupoch_conversions)/res/pcd/twoobstacle.pcd 0.1" output="screen">
-        <remap from="cloud_pcd" to="/points_cloud" />
-    </node>
-</launch>
