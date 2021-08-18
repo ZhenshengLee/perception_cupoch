@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #include "cupoch_conversions/cupoch_conversions.h"
+#include "cupoch/utility/platform.h"
+
+using namespace cupoch;
 
 namespace cupoch_conversions
 {
@@ -20,8 +23,19 @@ namespace cupoch_conversions
   void cupochToRos(std::shared_ptr<cupoch::geometry::PointCloud> &pointcloud, sensor_msgs::PointCloud2 &ros_pc2, std::string frame_id)
   {
     // d2h
-    auto pointcloud_points_host = pointcloud->GetPoints();
-    auto pointcloud_colors_host = pointcloud->GetColors();
+    // cudaMemcpy to improve speed, Async to lower the cpu usage
+    thrust::host_vector<Eigen::Vector3f> pointcloud_points_host;
+    pointcloud_points_host.resize(pointcloud->points_.size());
+    thrust::host_vector<Eigen::Vector3f> pointcloud_colors_host;
+    pointcloud_colors_host.resize(pointcloud->points_.size());
+
+    cudaStream_t s1, s2;
+    cudaStreamCreate(&s1); cudaStreamCreate(&s2);
+    cudaSafeCall(cudaMemcpyAsync(pointcloud_points_host.data(), thrust::raw_pointer_cast(pointcloud->points_.data()),
+                            pointcloud->points_.size() * sizeof(Eigen::Vector3f), cudaMemcpyDeviceToHost, s1));
+    cudaSafeCall(cudaMemcpyAsync(pointcloud_colors_host.data(), thrust::raw_pointer_cast(pointcloud->colors_.data()),
+                            pointcloud->colors_.size() * sizeof(Eigen::Vector3f), cudaMemcpyDeviceToHost, s2));
+    cudaDeviceSynchronize();
 
     sensor_msgs::PointCloud2Modifier modifier(ros_pc2);
     if (pointcloud->HasColors())
@@ -116,8 +130,17 @@ namespace cupoch_conversions
       }
     }
     // h2d
-    cupoch_pc->SetPoints(cupoch_pc_points_host);
-    cupoch_pc->SetColors(cupoch_pc_colors_host);
+    cupoch_pc->points_.resize(cupoch_pc_points_host.size());
+    cupoch_pc->colors_.resize(cupoch_pc_colors_host.size());
+
+    // cudaMemcpy to improve speed, Async to lower the cpu usage
+    cudaStream_t s1, s2;
+    cudaStreamCreate(&s1); cudaStreamCreate(&s2);
+    cudaSafeCall(cudaMemcpyAsync(thrust::raw_pointer_cast(cupoch_pc->points_.data()), cupoch_pc_points_host.data(),
+                            cupoch_pc_points_host.size() * sizeof(Eigen::Vector3f), cudaMemcpyHostToDevice, s1));
+    cudaSafeCall(cudaMemcpyAsync(thrust::raw_pointer_cast(cupoch_pc->colors_.data()), cupoch_pc_colors_host.data(),
+                            cupoch_pc_colors_host.size() * sizeof(Eigen::Vector3f), cudaMemcpyHostToDevice, s2));
+    cudaDeviceSynchronize();
   }
 
 //   zs@zs-dell:~$ rostopic echo /velodyne_points
