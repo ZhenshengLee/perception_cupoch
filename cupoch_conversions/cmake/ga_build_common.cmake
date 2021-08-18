@@ -74,6 +74,7 @@ set(CUPOCH_LIBRARIES
     # rmm
     liblzf
     rply
+    spdlog
     ${CUDA_LIBRARIES}
     ${CUDA_CUBLAS_LIBRARIES}
     ${CUDA_curand_LIBRARY}
