@@ -1,8 +1,7 @@
 <!-- -->
 <launch>
     <node pkg="cupoch_conversions" type="cupoch_conversions_test_node" name="cupoch_conversions_test_node" output="screen">
-        <!-- <param name="camera3d_point_topic" value="/points_cloud" /> -->
-        <param name="camera3d_point_topic" value="/rslidar_points" />
+        <param name="camera3d_point_topic" value="/points_cloud" />
     </node>
 
 </launch>

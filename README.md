@@ -48,6 +48,27 @@ roslaunch cupoch_conversions cupoch_conversions_test_node.launch
 roslaunch cupoch_conversions pub_pcd.launch
 ```
 
+### performance benchmark
+
+**NOTE:** If you use a desktop pc rather than a server, please ensure you cpu freq is configured properly.
+**NOTE:** You should use `sudo cpufreq-set -g performance` to get the best performance of `cudaMemCpy`
+
+```sh
+sudo apt-get install cpufrequtils
+# to get the highest freq
+sudo cpufreq-set -g performance
+# to get the default mode powersave
+sudo cpufreq-set -g powersave
+```
+
+```sh
+# t1
+roslaunch cupoch_conversions cupoch_conversions_test_node.launch
+# t2
+rosrun plotjuggler plotjuggler
+# plot the topic /cupoch/ros2cupoch
+```
+
 ## API Usage
 
 There are two functions provided in this library:
