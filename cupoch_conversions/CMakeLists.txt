@@ -9,6 +9,7 @@ include(ga_build_common)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
+  pcl_conversions
 )
 
 find_package(thrust REQUIRED QUIET)

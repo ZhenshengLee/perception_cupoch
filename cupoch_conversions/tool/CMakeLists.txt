@@ -18,3 +18,26 @@ target_link_libraries(${TEST_NAME}
     cupoch_conversions
     ${catkin_LIBRARIES}
 )
+
+find_package(PCL QUIET)
+if(PCL_FOUND)
+    set(TOOL_NAME pcl_conversions_test_node)
+    add_executable(${TOOL_NAME} pcl_conversions_test_node.cpp)
+    target_include_directories(${TOOL_NAME} PRIVATE
+        ${PCL_INCLUDE_DIRS}
+    )
+    target_compile_definitions(${TOOL_NAME} PRIVATE
+    )
+    target_link_libraries(${TOOL_NAME}
+        ${PCL_LIBRARIES}
+        ${catkin_LIBRARIES}
+    )
+    add_dependencies(${TOOL_NAME}
+        ${${PROJECT_NAME}_EXPORTED_TARGETS}
+        ${catkin_EXPORTED_TARGETS}
+    )
+    install(TARGETS ${TOOL_NAME}
+            ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+endif()
