@@ -29,12 +29,14 @@ namespace cupoch_conversions
     thrust::host_vector<Eigen::Vector3f> pointcloud_colors_host;
     pointcloud_colors_host.resize(pointcloud->points_.size());
 
-    cudaStream_t s1, s2;
-    cudaStreamCreate(&s1); cudaStreamCreate(&s2);
+    cudaStream_t s0 = utility::GetStream(0);
+    cudaStream_t s1 = utility::GetStream(1);
+    cudaStreamAttachMemAsync(s0, thrust::raw_pointer_cast(pointcloud->points_.data()));
     cudaSafeCall(cudaMemcpyAsync(pointcloud_points_host.data(), thrust::raw_pointer_cast(pointcloud->points_.data()),
-                            pointcloud->points_.size() * sizeof(Eigen::Vector3f), cudaMemcpyDeviceToHost, s1));
+                            pointcloud->points_.size() * sizeof(Eigen::Vector3f), cudaMemcpyDeviceToHost, s0));
+    cudaStreamAttachMemAsync(s1, thrust::raw_pointer_cast(pointcloud->colors_.data()));
     cudaSafeCall(cudaMemcpyAsync(pointcloud_colors_host.data(), thrust::raw_pointer_cast(pointcloud->colors_.data()),
-                            pointcloud->colors_.size() * sizeof(Eigen::Vector3f), cudaMemcpyDeviceToHost, s2));
+                            pointcloud->colors_.size() * sizeof(Eigen::Vector3f), cudaMemcpyDeviceToHost, s1));
     cudaDeviceSynchronize();
 
     sensor_msgs::PointCloud2Modifier modifier(ros_pc2);
@@ -134,12 +136,14 @@ namespace cupoch_conversions
     cupoch_pc->colors_.resize(cupoch_pc_colors_host.size());
 
     // cudaMemcpy to improve speed, Async to lower the cpu usage
-    cudaStream_t s1, s2;
-    cudaStreamCreate(&s1); cudaStreamCreate(&s2);
+    cudaStream_t s0 = utility::GetStream(0);
+    cudaStream_t s1 = utility::GetStream(1);
+    cudaStreamAttachMemAsync(s0, thrust::raw_pointer_cast(cupoch_pc->points_.data()));
     cudaSafeCall(cudaMemcpyAsync(thrust::raw_pointer_cast(cupoch_pc->points_.data()), cupoch_pc_points_host.data(),
-                            cupoch_pc_points_host.size() * sizeof(Eigen::Vector3f), cudaMemcpyHostToDevice, s1));
+                            cupoch_pc_points_host.size() * sizeof(Eigen::Vector3f), cudaMemcpyHostToDevice, s0));
+    cudaStreamAttachMemAsync(s1, thrust::raw_pointer_cast(cupoch_pc->colors_.data()));
     cudaSafeCall(cudaMemcpyAsync(thrust::raw_pointer_cast(cupoch_pc->colors_.data()), cupoch_pc_colors_host.data(),
-                            cupoch_pc_colors_host.size() * sizeof(Eigen::Vector3f), cudaMemcpyHostToDevice, s2));
+                            cupoch_pc_colors_host.size() * sizeof(Eigen::Vector3f), cudaMemcpyHostToDevice, s1));
     cudaDeviceSynchronize();
   }
 

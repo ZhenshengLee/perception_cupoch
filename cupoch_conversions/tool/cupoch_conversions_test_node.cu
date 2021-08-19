@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     cudaSetDeviceFlags( cudaDeviceScheduleBlockingSync);
 #else
     // use managed memory allocation to speed up memcpy
-    utility::InitializeAllocator(utility::rmmAllocationMode_t::CudaManagedMemoryPool, 1000000000);
+    utility::InitializeAllocator(utility::rmmAllocationMode_t::CudaManagedMemory, 1000000000);
 #endif
 
     private_nh.param("camera3d_point_topic", camera_point_topic, std::string("/points_cloud"));
