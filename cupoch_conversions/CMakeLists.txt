@@ -45,6 +45,7 @@ set_directory_properties(PROPERTIES COMPILE_DEFINITIONS "")
 GA_CHECK_CUDA()
 
 include_directories(
+    .
     include
     ${CUPOCH_INCLUDE_DIRS}
 )
@@ -77,6 +78,12 @@ target_link_libraries(cupoch_conversions
 if(GA_BUILD_TEST)
     add_subdirectory(test)
     add_subdirectory(tool)
+endif()
+
+# benchmark
+find_package(benchmark)
+if(benchmark_FOUND)
+add_subdirectory(benchmarks)
 endif()
 
 # Install
