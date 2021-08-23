@@ -43,15 +43,11 @@ cd ./devel/lib/cupoch_conversions
 
 ### ROS node test
 
-```sh
-roslaunch cupoch_conversions cupoch_conversions_test_node.launch
-roslaunch cupoch_conversions pub_pcd.launch
-```
-
-### performance benchmark
-
 **NOTE:** If you use a desktop pc rather than a server, please ensure you cpu freq is configured properly.
+
 **NOTE:** You should use `sudo cpufreq-set -g performance` to get the best performance of `cudaMemCpy`
+
+**NOTE:** You can refer [this guide from stackoverflow](https://askubuntu.com/questions/523640/how-i-can-disable-cpu-frequency-scaling-and-set-the-system-to-performance) to disable cpu scaling.
 
 ```sh
 sudo apt-get install cpufrequtils
@@ -67,6 +63,15 @@ roslaunch cupoch_conversions cupoch_conversions_test_node.launch
 # t2
 rosrun plotjuggler plotjuggler
 # plot the topic /cupoch/ros2cupoch
+```
+
+### performance benchmark
+
+rmm benchmark.
+
+```sh
+cd ./devel/lib/cupoch_conversions
+./RANDOM_ALLOCATIONS_BENCH  -n 1000 -m 1024
 ```
 
 ## API Usage
