@@ -16,7 +16,11 @@ This package provides functions that can convert pointclouds from ROS to cupoch 
 
 ### cupoch
 
-* Instructions to setup cupoch can be found [here](https://github.com/neka-nat/cupoch).
+~~* Instructions to setup cupoch can be found [here](https://github.com/neka-nat/cupoch).~~
+
+Because of issues, you can use the custom version of cupoch, naming [cupoch-fat](https://github.com/ZhenshengLee/cupoch-fat).
+
+And follow [this guide](./cupoch_conversions/docs/tutorial.md) to install cupoch to the path of `/opt/cupoch/`.
 
 ### cupoch_conversions
 
