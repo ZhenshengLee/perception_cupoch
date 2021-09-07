@@ -24,6 +24,12 @@ install custom version of cupoch-fat, which is based on cupoch 0.1.9.1.
 
 ```sh
 sudo apt install nasm
+sudo apt-get --yes install xorg-dev libglu1-mesa-dev libgl1-mesa-glx libglew-dev libglfw3-dev libeigen3-dev libpng-dev libpng16-16  libsdl2-dev python-dev python-tk python3-dev python3-tk  libtbb-dev  libglu1-mesa-dev  libc++-7-dev  libc++abi-7-dev  ninja-build  libxi-dev
+sudo apt install libfmt-dev pybind11-dev libqhull-dev libglfw3-dev liblapacke-dev
+```
+
+```sh
+
 git clone https://github.com/ZhenshengLee/cupoch-fat.git
 cd ./cupoch-fat
 mkdir build

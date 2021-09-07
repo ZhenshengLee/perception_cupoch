@@ -4,8 +4,8 @@ This package provides functions that can convert pointclouds from ROS to cupoch 
 
 ## Dependencies
 
-* Eigen3
-* cupoch
+* Eigen3-(currently 3.3.7)
+* cupoch-(currently 0.1.9.1) 
 
 ## System Requirements
 
@@ -13,6 +13,20 @@ This package provides functions that can convert pointclouds from ROS to cupoch 
 * cuda10.2+
 
 ## Installation
+
+### eigen3
+
+upgrade eigen to 3.3.7
+
+```sh
+# 1804
+sudo apt install libopenblas-dev freeglut3-dev libglew-dev libadolc-dev libcholmod3 libumfpack5 libmetis-dev libspqr2 libsparsehash-dev libmpfr-dev libmpfrc++-dev libfftw3-dev
+# jetson
+sudo apt install libopenblas-dev freeglut3-dev libglew-dev libadolc-dev libcholmod3.0.6 libumfpack5.7.1 libmetis-dev libspqr2.0.2 libsparsehash-dev libmpfr-dev libmpfrc++-dev libfftw3-dev
+
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+sudo make install
+```
 
 ### cupoch
 
@@ -35,6 +49,40 @@ export GPUAC_COMPILE_WITH_CUDA=1
 catkin_make -j5 -DCMAKE_BUILD_TYPE=Release
 ```
 
+## (Optional) Performance tunning for jetson
+
+**NOTE:** You should set power management policy for cpu and gpu to get the best performance of `cudaMemCpy`.
+
+### cpu frequency scaling
+
+refer to [this guide from stackoverflow](https://askubuntu.com/questions/523640/how-i-can-disable-cpu-frequency-scaling-and-set-the-system-to-performance) to disable cpu scaling.
+
+```sh
+sudo apt-get install cpufrequtils
+# to get the highest freq
+sudo cpufreq-set -g performance
+```
+
+```sh
+# to get the default mode powersave
+sudo cpufreq-set -g powersave
+```
+
+### gpu frequency scaling
+
+refer to [this guide](https://elinux.org/Jetson/AGX_Xavier_Performance_Governor) for more details.
+
+```sh
+# If not, please set CONFIG_DEVFREQ_GOV_PERFORMANCE=y and update the kernel
+zcat /proc/config.gz | grep CONFIG_DEVFREQ_GOV_PERFORMANCE
+# Run below command on board as root to keep GPU alive (not suspend)
+echo 0 > /sys/devices/17000000.gv11b/railgate_enable
+# Enable performance governor for GPU
+cat /sys/class/devfreq/17000000.gv11b/available_governors
+echo performance > /sys/class/devfreq/17000000.gv11b/governor
+cat /sys/class/devfreq/17000000.gv11b/governor
+```
+
 ## test
 
 ### Unit Test
@@ -46,20 +94,6 @@ cd ./devel/lib/cupoch_conversions
 ```
 
 ### ROS node test
-
-**NOTE:** If you use a desktop pc rather than a server, please ensure you cpu freq is configured properly.
-
-**NOTE:** You should use `sudo cpufreq-set -g performance` to get the best performance of `cudaMemCpy`
-
-**NOTE:** You can refer [this guide from stackoverflow](https://askubuntu.com/questions/523640/how-i-can-disable-cpu-frequency-scaling-and-set-the-system-to-performance) to disable cpu scaling.
-
-```sh
-sudo apt-get install cpufrequtils
-# to get the highest freq
-sudo cpufreq-set -g performance
-# to get the default mode powersave
-sudo cpufreq-set -g powersave
-```
 
 ```sh
 # t1
