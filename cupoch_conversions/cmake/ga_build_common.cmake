@@ -2,6 +2,7 @@
 set(GA_BUILD_TEST ON)
 
 # root dirs
+#set(CUPOCH_ROOT $ENV{HOME}/colcon_ws/install/cupoch)
 set(CUPOCH_ROOT "/opt/cupoch/cupoch/")
 
 find_package(OpenMP)
@@ -52,6 +53,7 @@ set(CUPOCH_INCLUDE_DIRS ${CUPOCH_ROOT}/include
     ${CUPOCH_ROOT}/third_party/fmt/include
     ${CUPOCH_ROOT}/third_party/liblzf/include
     ${CUPOCH_ROOT}/third_party/eigen/
+    ${CUPOCH_ROOT}/third_party/spdlog/include
     ${PNG_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIRS}
 )
@@ -75,6 +77,7 @@ set(CUPOCH_LIBRARIES
     liblzf
     rply
     spdlog
+    ${spdlog_LIBRARIES}
     ${CUDA_LIBRARIES}
     ${CUDA_CUBLAS_LIBRARIES}
     ${CUDA_curand_LIBRARY}
