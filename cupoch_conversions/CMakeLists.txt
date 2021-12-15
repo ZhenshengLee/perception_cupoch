@@ -15,6 +15,7 @@ find_package(thrust REQUIRED QUIET)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(urdfdom REQUIRED)
+find_package(CUDA REQUIRED)
 
 message("zs: CUPOCH_INCLUDE_DIRS = " ${CUPOCH_INCLUDE_DIRS})
 message("zs: CUPOCH_LIBRARIES = " ${CUPOCH_LIBRARIES})
@@ -23,61 +24,62 @@ message("zs: EIGEN3_INCLUDE_DIRS = " ${EIGEN3_INCLUDE_DIRS})
 GA_CHECK_CUDA()
 
 include_directories(
-    include
-    ${CUPOCH_INCLUDE_DIRS}
+        include
+        ${CUPOCH_INCLUDE_DIRS}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION include/${PROJECT_NAME}/
-)
+        DESTINATION include/${PROJECT_NAME}/
+        )
 
 install(DIRECTORY res
-  DESTINATION lib/${PROJECT_NAME}/
-)
-
-set_directory_properties(PROPERTIES COMPILE_DEFINITIONS "")
+        DESTINATION lib/${PROJECT_NAME}/
+        )
 
 APPEND_TARGET_ARCH_FLAGS()
 
+set_directory_properties(PROPERTIES COMPILE_DEFINITIONS "")
+APPEND_TARGET_ARCH_FLAGS()
 set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}
-    ${CUPOCH_NVCC_FLAGS}
-)
+        ${CUPOCH_NVCC_FLAGS}
+        )
 add_definitions(${CUPOCH_DEFINITIONS})
 message("zs: ${CMAKE_PROJECT_NAME} CUDA_NVCC_FLAGS = " ${CUDA_NVCC_FLAGS})
+include(GATest)
 
 # C++ library
 cuda_add_library(cupoch_conversions STATIC src/cupoch_conversions.cu)
 ament_target_dependencies(cupoch_conversions
-    rclcpp
-    sensor_msgs
-    urdfdom
-)
+        rclcpp
+        sensor_msgs
+        urdfdom
+        )
 target_include_directories(cupoch_conversions PRIVATE
-    ${CUPOCH_INCLUDE_DIRS}
-)
+        ${CUPOCH_INCLUDE_DIRS}
+        )
 target_link_directories(cupoch_conversions PRIVATE
-    ${CUPOCH_LIBRARY_DIRS}
-)
+        ${CUPOCH_LIBRARY_DIRS}
+        )
 target_link_libraries(cupoch_conversions
-    ${CUPOCH_LIBRARIES}
-)
+        ${CUPOCH_LIBRARIES}
+        )
 
 # Tests
-if(GA_BUILD_TEST)
+if (GA_BUILD_TEST)
     add_subdirectory(test)
     add_subdirectory(tool)
-endif()
+endif ()
 
 # Install
 install(TARGETS cupoch_conversions
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION lib/${PROJECT_NAME}
-)
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION lib/${PROJECT_NAME}
+        )
 
 install(DIRECTORY include/cupoch_conversions/
-    DESTINATION include/${PROJECT_NAME}
-)
+        DESTINATION include/${PROJECT_NAME}
+        )
 
 ament_export_include_directories(include)
 ament_export_libraries(cupoch_conversions)

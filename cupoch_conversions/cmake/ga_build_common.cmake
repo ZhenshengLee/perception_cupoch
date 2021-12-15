@@ -2,8 +2,8 @@
 set(GA_BUILD_TEST ON)
 
 # root dirs
-#set(CUPOCH_ROOT $ENV{HOME}/colcon_ws/install/cupoch)
-set(CUPOCH_ROOT "/opt/cupoch/cupoch/")
+set(CUPOCH_ROOT $ENV{HOME}/colcon_ws/install/cupoch)
+#set(CUPOCH_ROOT "/opt/cupoch/cupoch/")
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
