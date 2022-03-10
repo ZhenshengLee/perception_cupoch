@@ -127,6 +127,10 @@ void rosToCupoch(const sensor_msgs::PointCloud2ConstPtr &ros_pc2, std::shared_pt
 * As cupoch pointclouds only contain `points`, `colors` and `normals`, the interface currently supports XYZ, XYZRGB pointclouds. XYZI pointclouds are handled by placing the `intensity` value in the `colors_`.
 * On creating a ROS pointcloud from an cupoch pointcloud, the user is expected to set the timestamp in the header and pass the `frame_id` to the conversion function.
 
+## Example
+
+Please refer to this repo [ga_points_downsampler](https://github.com/ZhenshengLee/ga_points_downsampler) which is a ros node to downsample pointclouds with cupoch.
+
 ## Documentation
 
 Documentation can be generated using Doxygen and the configuration file by executing  `doxygen Doxyfile` in the package.
